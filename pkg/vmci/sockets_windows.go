@@ -8,13 +8,13 @@ import (
 	"golang.org/x/sys/windows"
 )
 
-type ControlCode = uint32
+type controlCode = uint32
 
 const (
-	VMCISocketsVersion     = ControlCode(0x81032058)
-	VMCISocketsGetAFValue  = ControlCode(0x81032068)
-	VMCISocketsGetLocalCID = ControlCode(0x8103206c)
-	VMCISocketsUUID2CID    = ControlCode(0x810320a4)
+	ioctlVMCISocketsVersion     = controlCode(0x81032058)
+	ioctlVMCISocketsGetAFValue  = controlCode(0x81032068)
+	ioctlVMCISocketsGetLocalCID = controlCode(0x8103206c)
+	ioctlVMCISocketsUUID2CID    = controlCode(0x810320a4)
 )
 
 const (
@@ -57,7 +57,7 @@ func openSocketDevice() (windows.Handle, error) {
 	return hDevice, nil
 }
 
-func DeviceIOControl(cmd ControlCode) (uint32, error) {
+func deviceIOControl(cmd controlCode) (uint32, error) {
 	hDevice, err := openSocketDevice()
 	if err != nil {
 		return 0, err
@@ -90,7 +90,7 @@ func resultAsInt(val uint32, err error) (int, error) {
 //
 // See Version structure.
 func Version() (VersionNumber, error) {
-	val, err := DeviceIOControl(VMCISocketsVersion)
+	val, err := deviceIOControl(ioctlVMCISocketsVersion)
 	if err != nil {
 		return 0, nil
 	}
@@ -113,7 +113,7 @@ func Version() (VersionNumber, error) {
 //
 // Use of this function is thus discouraged; please use GetAFValueFd() instead.
 func GetAFValue() (int, error) {
-	return resultAsInt(DeviceIOControl(VMCISocketsGetAFValue))
+	return resultAsInt(deviceIOControl(ioctlVMCISocketsGetAFValue))
 }
 
 // GetAFValueFd retrieves the address family value for vSockets.
@@ -148,7 +148,7 @@ func ReleaseAFValueFd(_ int) {
 //
 // Returns ErrContextUnavailable when current context ID is not available.
 func GetLocalCID() (uint32, error) {
-	result, err := DeviceIOControl(VMCISocketsGetLocalCID)
+	result, err := deviceIOControl(ioctlVMCISocketsGetLocalCID)
 	if err != nil {
 		return 0, err
 	}
@@ -183,9 +183,9 @@ func UUID2ContextID(uuid string) (uint32, error) {
 	ioSize := uint32(unsafe.Sizeof(io))
 
 	var ioReturn uint32
-	err = windows.DeviceIoControl(hDevice, VMCISocketsUUID2CID, ioPtr, ioSize, ioPtr, ioSize, &ioReturn, nil)
+	err = windows.DeviceIoControl(hDevice, ioctlVMCISocketsUUID2CID, ioPtr, ioSize, ioPtr, ioSize, &ioReturn, nil)
 	if err != nil {
-		return 0, newDeviceIOControlError(VMCISocketsUUID2CID, err)
+		return 0, newDeviceIOControlError(ioctlVMCISocketsUUID2CID, err)
 	}
 
 	return io.contextID, checkContextID(io.contextID)

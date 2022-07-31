@@ -15,17 +15,15 @@ var (
 	ErrInvalidHandle = errors.New("vmci: invalid handle")
 )
 
-// DeviceIOControlError is DeviceIOControl error.
+// DeviceIOControlError is deviceIOControl error.
 //
 // Error occurs when invalid control code was supplied or ioctl operation failed.
-//
-// See DeviceIOControl.
 type DeviceIOControlError struct {
-	ControlCode ControlCode
+	ControlCode controlCode
 	InnerError  error
 }
 
-func newDeviceIOControlError(controlCode ControlCode, baseErr error) *DeviceIOControlError {
+func newDeviceIOControlError(controlCode controlCode, baseErr error) *DeviceIOControlError {
 	return &DeviceIOControlError{InnerError: baseErr, ControlCode: controlCode}
 }
 
