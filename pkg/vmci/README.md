@@ -1,6 +1,6 @@
-# VMWare vSockets bindings for Go
+# VMWare VMCI/vSockets bindings for Go
 
-This package contains VMWare [vSockets](https://developer.vmware.com/docs/5521/vmware-vsockets-programming-guide/doc/vsockPreface.html) implementation for Go.
+This package contains VMWare [vSockets](https://developer.vmware.com/docs/5521/vmware-vsockets-programming-guide/doc/vsockPreface.html) and [VMCI](https://www.vmware.com/pdf/ws7_esx4_vmci_sockets.pdf) bindings for Go.
 
 ## Usage
 
