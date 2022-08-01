@@ -28,16 +28,6 @@ const (
 	svmZeroSize = 4
 )
 
-var pVMCISocketsDeviceAddr *uint16
-
-func init() {
-	var err error
-	pVMCISocketsDeviceAddr, err = windows.UTF16PtrFromString(socketsDevicePath)
-	if err != nil {
-		panic(fmt.Sprintf("vmci: windows.UTF16PtrFromString(%q) returned an error: %s", socketsDevicePath, err))
-	}
-}
-
 type sockAddrVM struct {
 	family    saFamily
 	reserved1 uint16
@@ -47,7 +37,12 @@ type sockAddrVM struct {
 }
 
 func openSocketDevice() (windows.Handle, error) {
-	hDevice, err := windows.CreateFile(pVMCISocketsDeviceAddr, windows.GENERIC_READ, 0, nil,
+	lpSocketAddr, err := windows.UTF16PtrFromString(socketsDevicePath)
+	if err != nil {
+		return 0, err
+	}
+
+	hDevice, err := windows.CreateFile(lpSocketAddr, windows.GENERIC_READ, 0, nil,
 		windows.OPEN_EXISTING, windows.FILE_FLAG_OVERLAPPED, 0)
 	if err != nil {
 		return 0, fmt.Errorf("vmci: failed to open VMCI device: %w", err)
