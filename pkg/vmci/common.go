@@ -41,11 +41,8 @@ const (
 	// VMAddrPortAny is bind to any available port.
 	VMAddrPortAny = uint32(math.MaxUint32)
 
-	// SocketsInvalidVersion is invalid vSockets version.
-	SocketsInvalidVersion = uint32(math.MaxUint32)
+	socketsInvalidVersion = uint32(math.MaxUint32)
 )
-
-func omitError(_ error) {}
 
 /**
 #if defined(_WIN32) || defined(VMKERNEL)

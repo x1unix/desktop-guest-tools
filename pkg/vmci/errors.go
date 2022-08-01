@@ -13,6 +13,9 @@ var (
 
 	// ErrInvalidHandle occurs when VMCI device file could not be opened.
 	ErrInvalidHandle = errors.New("vmci: invalid handle")
+
+	// ErrInvalidVersion occurs when returned vSockets version is invalid.
+	ErrInvalidVersion = errors.New("vmci: invalid version")
 )
 
 // DeviceIOControlError is deviceIOControl error.

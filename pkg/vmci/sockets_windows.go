@@ -8,6 +8,9 @@ import (
 	"golang.org/x/sys/windows"
 )
 
+// Source code adapted from vmci-socket.h
+// Source: https://github.com/vmware/open-vm-tools/blob/master/open-vm-tools/lib/include/vmci_sockets.h
+
 type controlCode = uint32
 
 const (
@@ -63,7 +66,9 @@ func deviceIOControl(cmd controlCode) (uint32, error) {
 		return 0, err
 	}
 
-	defer omitError(windows.CloseHandle(hDevice))
+	defer func() {
+		_ = windows.CloseHandle(hDevice)
+	}()
 
 	// overflow trick is used very often in original source code as:
 	// 	unsigned int val = (unsigned int)-1;
@@ -92,8 +97,13 @@ func resultAsInt(val uint32, err error) (int, error) {
 func Version() (VersionNumber, error) {
 	val, err := deviceIOControl(ioctlVMCISocketsVersion)
 	if err != nil {
-		return 0, nil
+		return 0, err
 	}
+
+	if val == socketsInvalidVersion {
+		return 0, ErrInvalidVersion
+	}
+
 	return VersionNumber(val), err
 }
 
@@ -169,10 +179,12 @@ func GetLocalCID() (uint32, error) {
 func UUID2ContextID(uuid string) (uint32, error) {
 	hDevice, err := openSocketDevice()
 	if err != nil {
-		return 0, nil
+		return 0, err
 	}
 
-	defer omitError(windows.CloseHandle(hDevice))
+	defer func() {
+		_ = windows.CloseHandle(hDevice)
+	}()
 
 	io := uuid2cid{
 		contextID:  VMAddrCIDAny,
