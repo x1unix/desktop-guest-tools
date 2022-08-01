@@ -25,7 +25,7 @@ The goal of this project is to provide (at-least partially) a similar experience
     <th scope="col">Guest</th>
   </tr>
   <tr>
-    <th scope="row">VMWare Workstation</th>
+    <th scope="row">VMware Workstation</th>
     <td>✅</td>
     <td>❌</td>
     <td>❌</td>

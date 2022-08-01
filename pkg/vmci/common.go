@@ -48,17 +48,17 @@ const (
 type ContextID = uint32
 
 const (
-	// VMWarePlayerHostCID is VMWare Player host ContextID.
-	VMWarePlayerHostCID ContextID = 0
+	// VMwarePlayerHostCID is VMware Player host ContextID.
+	VMwarePlayerHostCID ContextID = 0
 
-	// VMWareESXIHostCID is VMWare ESXi host ContextID.
-	VMWareESXIHostCID ContextID = 1
+	// VMwareESXIHostCID is VMware ESXi host ContextID.
+	VMwareESXIHostCID ContextID = 1
 
-	// VMWareHypervisorCID is VMWare Workstation/Hypervisor ContextID.
-	VMWareHypervisorCID ContextID = 2
+	// VMwareHypervisorCID is VMware Workstation/Hypervisor ContextID.
+	VMwareHypervisorCID ContextID = 2
 
-	// VMWareInvalidCID is invalid ContextID value.
-	VMWareInvalidCID ContextID = VMAddrCIDAny
+	// VMwareInvalidCID is invalid ContextID value.
+	VMwareInvalidCID ContextID = VMAddrCIDAny
 )
 
 /**

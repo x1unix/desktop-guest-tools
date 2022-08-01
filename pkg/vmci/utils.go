@@ -20,7 +20,7 @@ func checkContextID(cid uint32) error {
 // IsHypervisorContext reports whenever a passed context ID is hypervisor context.
 func IsHypervisorContext(cid ContextID) bool {
 	switch cid {
-	case VMWareHypervisorCID, VMWareESXIHostCID, VMWarePlayerHostCID, VMWareInvalidCID:
+	case VMwareHypervisorCID, VMwareESXIHostCID, VMwarePlayerHostCID, VMwareInvalidCID:
 		return true
 	}
 	return false

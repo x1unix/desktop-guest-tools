@@ -13,7 +13,7 @@ func main() {
 		log.Fatalln("No VMCI found")
 	}
 
-	fmt.Println("VMWare VMCI address family:", family)
+	fmt.Println("VMware VMCI address family:", family)
 	localCID := try(vmci.GetLocalCID())
 	fmt.Println("local ContextID:", localCID)
 	dumpCID(localCID)
@@ -28,12 +28,12 @@ func dumpCID(cid vmci.ContextID) {
 
 	fmt.Print("Hypervisor: ")
 	switch cid {
-	case vmci.VMWareHypervisorCID:
-		fmt.Println("VMWare Workstation")
-	case vmci.VMWareESXIHostCID:
-		fmt.Println("VMWare ESXi")
-	case vmci.VMWarePlayerHostCID:
-		fmt.Println("VMWare Player")
+	case vmci.VMwareHypervisorCID:
+		fmt.Println("VMware Workstation")
+	case vmci.VMwareESXIHostCID:
+		fmt.Println("VMware ESXi")
+	case vmci.VMwarePlayerHostCID:
+		fmt.Println("VMware Player")
 	default:
 		fmt.Println("Not Found")
 	}
