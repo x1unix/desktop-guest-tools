@@ -8,16 +8,22 @@ import (
 )
 
 func main() {
-	val, err := vmci.GetAFValue()
+	family := try(vmci.GetAFValue())
+	if family == 0 {
+		log.Fatalln("No VMCI found")
+	}
+
+	fmt.Println("VMWare VMCI address family:", family)
+	localCID := try(vmci.GetLocalCID())
+	fmt.Println("local CID:", localCID)
+	getVersion()
+}
+
+func try[T any](val T, err error) T {
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	if val == 0 {
-		log.Fatalln("VMIC not available")
-	}
-
-	getVersion()
+	return val
 }
 
 func getVersion() {
