@@ -44,6 +44,23 @@ const (
 	socketsInvalidVersion = uint32(math.MaxUint32)
 )
 
+// ContextID is common ID.
+type ContextID = uint32
+
+const (
+	// VMWarePlayerHostCID is VMWare Player host ContextID.
+	VMWarePlayerHostCID ContextID = 0
+
+	// VMWareESXIHostCID is VMWare ESXi host ContextID.
+	VMWareESXIHostCID ContextID = 1
+
+	// VMWareHypervisorCID is VMWare Workstation/Hypervisor ContextID.
+	VMWareHypervisorCID ContextID = 2
+
+	// VMWareInvalidCID is invalid ContextID value.
+	VMWareInvalidCID ContextID = VMAddrCIDAny
+)
+
 /**
 #if defined(_WIN32) || defined(VMKERNEL)
    typedef unsigned short sa_family_t;

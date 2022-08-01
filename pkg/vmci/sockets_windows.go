@@ -157,7 +157,7 @@ func ReleaseAFValueFd(_ int) {
 // GetLocalCID retrieves the current context ID.
 //
 // Returns ErrContextUnavailable when current context ID is not available.
-func GetLocalCID() (uint32, error) {
+func GetLocalCID() (ContextID, error) {
 	result, err := deviceIOControl(ioctlVMCISocketsGetLocalCID)
 	if err != nil {
 		return 0, err
@@ -176,7 +176,7 @@ func GetLocalCID() (uint32, error) {
 //
 // Returns ErrContextUnavailable when context is not available.
 //
-func UUID2ContextID(uuid string) (uint32, error) {
+func UUID2ContextID(uuid string) (ContextID, error) {
 	hDevice, err := openSocketDevice()
 	if err != nil {
 		return 0, err
