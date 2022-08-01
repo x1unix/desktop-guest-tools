@@ -9,7 +9,7 @@ import (
 
 func main() {
 	family := try(vmci.GetAFValue())
-	if family == 0 {
+	if family < 0 {
 		log.Fatalln("No VMCI found")
 	}
 
