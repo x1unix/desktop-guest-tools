@@ -88,7 +88,8 @@ func deviceIOControl(cmd controlCode) (uint32, error) {
 }
 
 func resultAsInt(val uint32, err error) (int, error) {
-	return int(val), err
+	i32 := (int32)(val)
+	return int(i32), err
 }
 
 // Version retrieves the vSockets version.
