@@ -38,11 +38,8 @@ func Listen(port int) (*VSocketListener, error) {
 		return nil, fmt.Errorf("socket bind failed: %w", err)
 	}
 
-	//net.ListenUnix()
 	return &VSocketListener{
 		socketFd: sockFd,
 		sockAddr: addr,
 	}, nil
-	//syscall.Bind(sockFd, addr)
-
 }

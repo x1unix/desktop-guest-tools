@@ -39,7 +39,7 @@ type sockAddrVM struct {
 
 func (sa *sockAddrVM) sockaddr() (unsafe.Pointer, int32) {
 	size := unsafe.Sizeof(*sa)
-	return unsafe.Pointer(&sa), int32(size)
+	return unsafe.Pointer(sa), int32(size)
 }
 
 func newSockAddr(family saFamily, port, cid uint32) *sockAddrVM {
