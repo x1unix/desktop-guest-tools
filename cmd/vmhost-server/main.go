@@ -17,7 +17,7 @@ func main() {
 
 	log.Printf("VMware VMCI address family: 0x%[1]x (%[1]d)\n", family)
 	localCID := try(vmci.GetLocalCID())
-	log.Println("Local ContextID:", localCID)
+	log.Println("Local CID:", localCID)
 	dumpCID(localCID)
 	getVersion()
 	testConnect()
