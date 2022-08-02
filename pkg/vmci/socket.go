@@ -32,7 +32,7 @@ func Listen(port int) (*VSocketListener, error) {
 		return nil, fmt.Errorf("failed to open socket: %w", err)
 	}
 
-	addr := newSockAddr(saFamily(afVmci), VMAddrCIDAny, uint32(port))
+	addr := newSockAddr(saFamily(afVmci), uint32(port), VMAddrCIDAny)
 	addrPtr, ptrSize := addr.sockaddr()
 	if err := syscallBind(sockFd, addrPtr, ptrSize); err != nil {
 		return nil, fmt.Errorf("socket bind failed: %w", err)
