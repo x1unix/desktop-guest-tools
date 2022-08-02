@@ -28,12 +28,26 @@ const (
 	svmZeroSize = 4
 )
 
+// sockAddrVM is sockaddr equivalent for VMCI.
 type sockAddrVM struct {
 	family    saFamily
 	reserved1 uint16
 	port      uint32
 	cid       uint32
 	zero      [svmZeroSize]byte
+}
+
+func (sa *sockAddrVM) sockaddr() (unsafe.Pointer, int32) {
+	size := unsafe.Sizeof(*sa)
+	return unsafe.Pointer(&sa), int32(size)
+}
+
+func newSockAddr(family saFamily, port, cid uint32) *sockAddrVM {
+	return &sockAddrVM{
+		family: family,
+		cid:    cid,
+		port:   port,
+	}
 }
 
 func openSocketDevice() (windows.Handle, error) {

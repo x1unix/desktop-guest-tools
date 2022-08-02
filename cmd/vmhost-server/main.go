@@ -1,8 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"log"
+	"runtime"
+	"runtime/debug"
+	"time"
 
 	"github.com/x1unix/desktop-guest-tools/pkg/vmci"
 )
@@ -13,36 +15,58 @@ func main() {
 		log.Fatalln("No VMCI found")
 	}
 
-	fmt.Println("VMware VMCI address family:", family)
+	log.Printf("VMware VMCI address family: 0x%[1]x (%[1]d)\n", family)
 	localCID := try(vmci.GetLocalCID())
-	fmt.Println("local ContextID:", localCID)
+	log.Println("Local ContextID:", localCID)
 	dumpCID(localCID)
 	getVersion()
+	testConnect()
+}
+
+func testConnect() {
+	log.Println("Trying to listen...")
+	const port = 5000
+	l, err := vmci.Listen(port)
+	if err != nil {
+		if vmci.IsUnsupportedProtocolError(err) {
+			log.Println("Seems vSockets protocol is not registred in WinSock protocols catalog")
+			log.Println("Please check: netsh winsock show catalog")
+			log.Println("Or: HKLM\\SYSTEM\\CurrentControlSet\\Services\\WinSock2\\Parameters\\")
+		}
+		log.Fatalln(err)
+	}
+	log.Println("Listening on port", port)
+	time.Sleep(5 * time.Second)
+	log.Println("Closing socket")
+	if err := l.Close(); err != nil {
+		log.Fatal("failed to close socket:", err)
+	}
 }
 
 func dumpCID(cid vmci.ContextID) {
 	if !vmci.IsHypervisorContext(cid) {
-		fmt.Println("Guest machine detected - CID=", cid)
+		log.Println("Guest machine detected - CID=", cid)
 		return
 	}
 
-	fmt.Print("Hypervisor: ")
 	switch cid {
 	case vmci.VMwareHypervisorCID:
-		fmt.Println("VMware Workstation")
+		log.Println("Hypervisor: VMware Workstation or vSphere")
 	case vmci.VMwareESXIHostCID:
-		fmt.Println("VMware ESXi")
+		log.Println("Hypervisor: VMware ESXi")
 	case vmci.VMwarePlayerHostCID:
-		fmt.Println("VMware Player")
+		log.Println("Hypervisor: VMware Player")
 	default:
-		fmt.Println("Not Found")
+		log.Println("Hypervisor: Not Found")
 	}
 }
 
 func try[T any](val T, err error) T {
 	if err != nil {
-		log.Fatalln(err)
+		strace := string(debug.Stack())
+		log.Fatalln(err, "\n", strace)
 	}
+	runtime.Caller(1)
 	return val
 }
 
@@ -52,8 +76,6 @@ func getVersion() {
 		log.Fatalln(err)
 	}
 
-	fmt.Println("Version:", ver.UInt32())
-	fmt.Println("\tMajor:", ver.Major())
-	fmt.Println("\tMinor:", ver.Minor())
-	fmt.Println("\tEpoch:", ver.Epoch())
+	log.Printf("vSockets Version: %d (Major: %d; Minor: %d; Epoch: %d)\n",
+		ver.UInt32(), ver.Major(), ver.Minor(), ver.Epoch())
 }
