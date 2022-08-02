@@ -6,6 +6,8 @@ import (
 	"unsafe"
 )
 
+const listenBacklogSize = 100
+
 // Workaround to call syscall.Bind with a custom syscall.Sockaddr implementation.
 // Sockaddr interface methods are unexported, so it's impossible to implement it.
 //
@@ -18,6 +20,10 @@ func syscallBind(s syscall.Handle, name unsafe.Pointer, namelen int32) (err erro
 type VSocketListener struct {
 	socketFd syscall.Handle
 	sockAddr *sockAddrVM
+}
+
+func (l VSocketListener) Close() error {
+	return closeSocket(l.socketFd)
 }
 
 // Listen acts like net.Listen for vSocket sockets.
@@ -35,7 +41,13 @@ func Listen(port int) (*VSocketListener, error) {
 	addr := newSockAddr(saFamily(afVmci), uint32(port), VMAddrCIDAny)
 	addrPtr, ptrSize := addr.sockaddr()
 	if err := syscallBind(sockFd, addrPtr, ptrSize); err != nil {
+		_ = closeSocket(sockFd)
 		return nil, fmt.Errorf("socket bind failed: %w", err)
+	}
+
+	if err := syscall.Listen(sockFd, listenBacklogSize); err != nil {
+		_ = closeSocket(sockFd)
+		return nil, fmt.Errorf("socket listen failed: %w", err)
 	}
 
 	return &VSocketListener{

@@ -7,10 +7,10 @@ import (
 	"syscall"
 )
 
-func (l VSocketListener) Close() error {
-	if l.socketFd == syscall.Stdin {
+func closeSocket(fd syscall.Handle) error {
+	if fd == syscall.Stdin {
 		return errors.New("close: invalid socket handle")
 	}
 
-	return syscall.Close(l.socketFd)
+	return syscall.Close(fd)
 }
